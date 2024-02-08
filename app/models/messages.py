@@ -8,9 +8,5 @@ class MessageModel(BaseModel):
     chat_id: str
     read_by: List[str] #objectID list of user
 
-class ResponseMessageModel(BaseModel):
+class ResponseMessageModel(MessageModel):
     id: str = Field(alias="_id")
-    sender_id: str
-    content: str
-    chat_id: str
-    read_by: List[str] #objectID list of user

@@ -7,10 +7,5 @@ class UserModel(BaseModel):
     email: EmailStr
     avatar: str = None
 
-class ResponseUserModel(BaseModel):
+class ResponseUserModel(UserModel):
     id: str = Field(alias="_id")
-    username: str = None
-    password: str = None
-    fullname: str = None
-    email: EmailStr
-    avatar: str = None
