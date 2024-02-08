@@ -35,11 +35,13 @@ class ConversationRepository(BaseRepository):
             {"$project": {"_id": 1, "is_channel":1, "channel_name":1, "latest_message":1, "users": 1, "group_admin": 1}}  # Include only relevant fields
         ]
         cursor = self.conversations_collection.aggregate(aggregation)
-        return serialize_dict(await cursor.to_list(None))
+        conversation = await cursor.to_list(None)
+        return serialize_dict(conversation[0])
     
     async def get_all(self):
         return await serialize_list(self.conversations_collection.find())
     
+    #write function in conversation model convert to db model
     async def create(self, conversation: ConversationModel):
         await self.conversations_collection.insert_one({
             "is_channel": conversation.is_channel,

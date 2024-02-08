@@ -11,7 +11,7 @@ class ConversationModel(BaseModel):
 class ResponseConversationModel(BaseModel):
     id: str = Field(alias="_id")
     is_channel: bool = False 
-    users: List[str]
+    users: List[dict]
     group_admin: Optional[str] = None
     channel_name: str
     latest_message: str
