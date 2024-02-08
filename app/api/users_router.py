@@ -1,7 +1,7 @@
 from http import HTTPStatus
 from fastapi import APIRouter, Depends
 from app.repositories.manger import RepositoryManager
-from app.models.users import UserModel
+from app.models.users import UserModel, ResponseUserModel
 
 user_router = APIRouter(prefix="/api/v1/user", tags=["User"])
 
@@ -11,7 +11,7 @@ async def get_user(id: str, repos_manager: RepositoryManager = Depends()) -> dic
     return user
 
 @user_router.get("/")
-async def get_users(repos_manager: RepositoryManager = Depends()) -> list[UserModel]:
+async def get_users(repos_manager: RepositoryManager = Depends()) -> list[ResponseUserModel]:
     users = await repos_manager.user.get_all()
     return users
 
