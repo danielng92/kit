@@ -1,5 +1,8 @@
 import bson
 from motor.motor_asyncio import AsyncIOMotorCursor
+from bson import ObjectId
+
+from app.models.conversations import ConversationModel
 def serialize_dict(doc) -> dict | None:
     #TODO cuong will handle None later
     if isinstance(doc, dict):
@@ -24,3 +27,13 @@ async def serialize_list(cursor: AsyncIOMotorCursor) -> list | None:
     if(len(docs) == 0):
         return None
     return [serialize_dict(doc) for doc in docs]
+
+def convert_conversations_to_mongo_data(conversation: ConversationModel) -> dict:
+    doc = {
+            "is_channel": conversation.is_channel,
+            "users": [ObjectId(user_id) for user_id in conversation.users],
+            "group_admin": ObjectId(conversation.group_admin),
+            "latest_message": ObjectId(conversation.latest_message),
+            "channel_name": conversation.channel_name
+        }
+    return doc

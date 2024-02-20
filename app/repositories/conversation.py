@@ -1,4 +1,4 @@
-from app.utils.serialize import serialize_dict, serialize_list
+from app.utils.serialize import convert_conversations_to_mongo_data, serialize_dict, serialize_list
 from .base import BaseRepository
 from bson import ObjectId
 from app.models.conversations import ConversationModel
@@ -41,26 +41,13 @@ class ConversationRepository(BaseRepository):
     async def get_all(self):
         return await serialize_list(self.conversations_collection.find())
     
-    #write function in conversation model convert to db model
     async def create(self, conversation: ConversationModel):
-        await self.conversations_collection.insert_one({
-            "is_channel": conversation.is_channel,
-            "users": [ObjectId(user_id) for user_id in conversation.users],
-            "group_admin": ObjectId(conversation.group_admin),
-            "latest_message": ObjectId(conversation.latest_message),
-            "channel_name": conversation.channel_name
-        })
+        await self.conversations_collection.insert_one(convert_conversations_to_mongo_data(conversation))
 
     async def update(self, id: str, conversation: ConversationModel):
         await self.conversations_collection.update_one(
             {"_id": ObjectId(id)}, 
-            {"$set": {
-            "is_channel": conversation.is_channel,
-            "users": [ObjectId(user_id) for user_id in conversation.users],
-            "group_admin": ObjectId(conversation.group_admin),
-            "latest_message": ObjectId(conversation.latest_message),
-            "channel_name": conversation.channel_name
-        }})
+            {"$set": convert_conversations_to_mongo_data(conversation)})
 
     async def remove(self, id: str): 
         await self.conversations_collection.delete_one({"_id": ObjectId(id)})

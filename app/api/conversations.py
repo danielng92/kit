@@ -22,7 +22,7 @@ async def get_conversations(repos_manager: RepositoryManager = Depends()) -> lis
 
 @conversations_router.post("/")
 async def create_conversation(conversation: ConversationModel, repos_manager: RepositoryManager = Depends()):
-    await repos_manager.conversation.create(dict(conversation))
+    await repos_manager.conversation.create(conversation)
     return HTTPStatus.NO_CONTENT
 
 @conversations_router.put("/{id}")
