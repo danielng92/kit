@@ -16,7 +16,7 @@ class UserRepository(BaseRepository):
     async def create(self, user: UserModel):
         await self.users_collection.insert_one(user)
 
-    async def update(self,id: str,  user: UserModel):
+    async def update(self, id: str,  user: UserModel):
         await self.users_collection.update_one({"_id": ObjectId(id)}, {"$set": dict(user)})
 
     async def remove(self, id: str):

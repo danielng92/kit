@@ -107,13 +107,13 @@ async def test_user_update(setup_one_user) -> None:
         await repo.update(user_id, user)
         
         doc = await repo.get_by_id(user_id)
-        user = UserModel(**doc)
+        user_after_update = UserModel(**doc)
         #Assert
-        assert user.username == "changeusername"
-        assert user.avatar == "changeavatar"
-        assert user.email == "changeemail@gmail.com"
-        assert user.fullname == "changefullname"
-        assert user.password == "changepassword"
+        assert user_after_update.username == "changeusername"
+        assert user_after_update.avatar == "changeavatar"
+        assert user_after_update.email == "changeemail@gmail.com"
+        assert user_after_update.fullname == "changefullname"
+        assert user_after_update.password == "changepassword"
 
 @pytest.mark.asyncio
 async def test_user_remove(setup_one_user) -> None:

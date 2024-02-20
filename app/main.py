@@ -1,9 +1,9 @@
 from typing import Union
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from app.api.users_router import user_router
-from app.api.conversations_router import conversations_router
-from app.api.messages_router import messages_router
+from app.api.users import user_router
+from app.api.conversations import conversations_router
+from app.api.messages import messages_router
 from app.common.exceptions.bad_request import BadRequestException
 from app.common.exceptions.not_found import NotFoundException
 
