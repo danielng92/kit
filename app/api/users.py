@@ -7,7 +7,7 @@ from app.services.manger import ServiceManager
 user_router = APIRouter(prefix="/api/v1/user", tags=["User"])
 
 @user_router.get("/{id}")
-async def get_user(id: str, services: ServiceManager = Depends()) -> dict:
+async def get_user(id: str, services: ServiceManager = Depends()) -> ResponseUserModel:
     user = await services.user.get_by_id(id)
     return user
 

@@ -9,15 +9,13 @@ class UserRepository(BaseRepository):
     def __init__(self, users_collection) -> None:
         self.users_collection = users_collection
 
-    async def get_by_id(self, id: str) -> dict[ResponseUserModel]:
-        #right now serialize function is return dict and None type. 
-        #how to make it return dynamic ResponseUserModel or ResponseConversationModel ...
+    async def get_by_id(self, id: str) -> dict:
         return serialize_dict(await self.users_collection.find_one({"_id": ObjectId(id)}))
      
     async def get_by_email(self, email: str) -> dict:
         return serialize_dict(await self.users_collection.find_one({"email": email}))
 
-    async def get_all(self):
+    async def get_all(self) -> list:
         return await serialize_list(self.users_collection.find())
 
     async def create(self, user: UserModel):
