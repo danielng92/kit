@@ -5,7 +5,7 @@ from typing import List
 class MessageModel(BaseModel):
     sender_id: str
     content: str
-    chat_id: str
+    conversation_id: str
     read_by: List[str] #objectID list of user
 
 class ResponseMessageModel(MessageModel):
