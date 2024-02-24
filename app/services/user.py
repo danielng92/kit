@@ -6,7 +6,7 @@ from app.repositories.manger import RepositoryManager
 
 
 class UserService():
-    def __init__(self, repositories: RepositoryManager = Depends()) -> None:
+    def __init__(self, repositories: RepositoryManager) -> None:
         self.repositories = repositories
 
     async def get_by_id(self, id: str) -> ResponseUserModel:
