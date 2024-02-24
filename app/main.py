@@ -6,10 +6,19 @@ from app.api.users import user_router
 from app.api.conversations import conversations_router
 from app.api.auth import auth_router
 from app.api.messages import messages_router
+from app.api.users_protected import  UserProtected
 from app.common.exceptions.bad_request import BadRequestException
+from app.common.exceptions.exceptions import UnauthorizeException
 from app.common.exceptions.not_found import NotFoundException
 
+from app.config.mongodb import get_db
+from app.repositories.manger import RepositoryManager
+db = get_db()
+repositores = RepositoryManager(db)
+user_instance = UserProtected(repositores)
 app = FastAPI()
+app.include_router(user_instance.router)
+
 app.include_router(user_router)
 app.include_router(conversations_router)
 app.include_router(messages_router)
