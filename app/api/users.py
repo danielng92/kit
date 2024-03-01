@@ -1,6 +1,5 @@
 from http import HTTPStatus
 from fastapi import APIRouter, Depends, Request
-from app.api.auth import authorize
 from app.repositories.manger import RepositoryManager
 from app.models.users import UserModel
 
@@ -12,8 +11,7 @@ async def get_user(id: str, repositories: RepositoryManager = Depends()) -> dict
     return user
 
 @user_router.get("/")
-@authorize #For Developing purpose
-async def get_users(request: Request,repositories: RepositoryManager = Depends()) -> list[UserModel]:
+async def get_users(repositories: RepositoryManager = Depends()) -> list[UserModel]:
     users = await repositories.user.get_all()
     return users
 

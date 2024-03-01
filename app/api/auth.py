@@ -1,44 +1,16 @@
-import asyncio
-from functools import wraps
 import json
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
+from app.config.settings import Settings
 from starlette.config import Config
 from starlette.requests import Request
 from starlette.responses import HTMLResponse, RedirectResponse
 from authlib.integrations.starlette_client import OAuth, OAuthError
 from fastapi.security import OAuth2AuthorizationCodeBearer
-
 from app.common.exceptions.exceptions import UnauthorizeException
 
-async def validate_token(request: Request):
-    try:
-        token = await oauth2_scheme(request)
-        if not token:
-            raise UnauthorizeException("Unauthorized"  + str(error))
-    except OAuthError as error:
-        raise UnauthorizeException("Unauthorized"  + str(error))
-
-# Authorization decorator
-def authorize(func):
-    @wraps(func)
-    async def wrapper(*args, **kwargs):
-        print("in wrapper")
-        for arg_name, arg_value in kwargs.items():
-            if isinstance(arg_value, Request):
-                print("unauthorized")
-                await validate_token(arg_value)
-                print("authorized")
-        return await func(*args, **kwargs)
-    return wrapper
-
-# Class-level authorization decorator
-def authorize_class(cls):
-    for name, method in cls.__dict__.items():
-        if callable(method):
-            setattr(cls, name, authorize(method) if asyncio.iscoroutinefunction(method) else method)
-    return cls
-
+settings = Settings()
+uri = settings.MONGODB_CONNECT_STRING
 config = Config('./app/.env')
 oauth = OAuth(config)
 CONF_URL = 'https://accounts.google.com/.well-known/openid-configuration'
