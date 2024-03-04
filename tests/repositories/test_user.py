@@ -22,8 +22,7 @@ def override_get_db():
 
 app.dependency_overrides[get_db] = override_get_db
 
-
-@pytest.fixture(scope="module")
+# @pytest.fixture(scope="module")
 async def setup_one_user():
     client = AsyncIOMotorClient(uri)
     db = client[settings.TEST_DATABASE_NAME]
@@ -38,7 +37,6 @@ async def setup_one_user():
     finally:
        await client.drop_database(settings.TEST_DATABASE_NAME)
 
-@pytest.fixture(scope="module")
 async def setup_two_user():
     client = AsyncIOMotorClient(uri)
     db = client["kit_test"]
@@ -53,48 +51,48 @@ async def setup_two_user():
     try:
         yield collection
     finally:
-        await client.drop_database("kit_test")
+        await client.drop_database(settings.TEST_DATABASE_NAME)
 
 @pytest.mark.asyncio
-async def test_get_user_by_id(setup_one_user) -> None:
+async def test_get_user_by_id() -> None:
     #Act
-    async for collection_test, user_id in setup_one_user:
+    async for collection_test, user_id in setup_one_user():
         repo = UserRepository(collection_test)
         doc = await repo.get_by_id(user_id)
         user = UserModel(**doc)
-        #Assert
-        assert user.username == "username"
+    #Assert
+    assert user.username == "username"
 
 @pytest.mark.asyncio
-async def test_get_all(setup_two_user) -> None:
+async def test_get_all() -> None:
     #Act
-    async for collection_test in setup_two_user:
+    async for collection_test in setup_two_user():
         repo = UserRepository(collection_test)
         docs = await repo.get_all()
         doc1 = docs[0]
         doc2 = docs[1]
         user1 = UserModel(**doc1)
         user2 = UserModel(**doc2)
-        #Assert
-        assert len(docs) == 2
-        assert user1.username == "username1"
-        assert user2.username == "username2"
+    #Assert
+    assert len(docs) == 2
+    assert user1.username == "username1"
+    assert user2.username == "username2"
 
 @pytest.mark.asyncio
-async def test_create_user(setup_one_user) -> None:
+async def test_create_user() -> None:
     #Act
-    async for collection_test, user_id in setup_one_user:
+    async for collection_test, user_id in setup_one_user():
         repo = UserRepository(collection_test)
         result = await repo.create(user_test)
         user_just_created_dict = await repo.get_by_id(result.inserted_id)
         user_just_created = UserModel(**user_just_created_dict)
-        #Assert
-        assert user_just_created.username == "test"
+    #Assert
+    assert user_just_created.username == "test 123"
 
 @pytest.mark.asyncio
-async def test_user_update(setup_one_user) -> None:
+async def test_user_update() -> None:
     #Arrange
-    async for collection_test, user_id in setup_one_user:
+    async for collection_test, user_id in setup_one_user():
         repo = UserRepository(collection_test)
         doc = await repo.get_by_id(user_id)
         user = UserModel(**doc)
@@ -109,18 +107,18 @@ async def test_user_update(setup_one_user) -> None:
         doc = await repo.get_by_id(user_id)
         user_after_update = UserModel(**doc)
         #Assert
-        assert user_after_update.username == "changeusername"
-        assert user_after_update.avatar == "changeavatar"
-        assert user_after_update.email == "changeemail@gmail.com"
-        assert user_after_update.fullname == "changefullname"
-        assert user_after_update.password == "changepassword"
+    assert user_after_update.username == "changeusername 11111"
+    assert user_after_update.avatar == "changeavatar"
+    assert user_after_update.email == "changeemail@gmail.com"
+    assert user_after_update.fullname == "changefullname"
+    assert user_after_update.password == "changepassword"
 
 @pytest.mark.asyncio
-async def test_user_remove(setup_one_user) -> None:
+async def test_user_remove() -> None:
     #Arrange
-    async for collection_test, user_id in setup_one_user:
+    async for collection_test, user_id in setup_one_user():
         repo = UserRepository(collection_test)
         await repo.remove(user_id)
-        list = await repo.get_all()
-        #Assert
-        assert list == None
+        user = await repo.get_all()
+    #Assert
+    assert user == None
