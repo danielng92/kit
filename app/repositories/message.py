@@ -1,4 +1,3 @@
-
 from bson import ObjectId
 from app.models.messages import MessageModel
 from app.repositories.base import BaseRepository
@@ -12,7 +11,7 @@ class MessageRepository(BaseRepository):
     async def get_by_id(self, id: str) ->dict:
         return serialize_dict(await self.message_collection.find_one({"_id": ObjectId(id)}))
     
-    async def get_all(self):
+    async def get_all(self) -> list:
         return await serialize_list(self.message_collection.find())
     
     async def create(self, message: MessageModel):
@@ -24,5 +23,5 @@ class MessageRepository(BaseRepository):
     async def remove(self, id: str):
         await self.message_collection.delete_one({"_id": ObjectId(id)})
 
-    async def get_by_conversation_id(self, id:str) ->list:
+    async def get_by_conversation_id(self, id:str):
         return await serialize_list(self.message_collection.find({"conversation_id": ObjectId(id)}))

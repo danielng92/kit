@@ -1,6 +1,4 @@
-from http import HTTPStatus
-from fastapi import APIRouter, Depends, Request
-from app.repositories.manger import RepositoryManager
+from fastapi import APIRouter, Depends
 from app.models.users import ResponseUserModel, UserModel
 from app.services.manger import ServiceManager
 

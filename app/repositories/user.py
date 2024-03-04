@@ -19,7 +19,7 @@ class UserRepository(BaseRepository):
         return await serialize_list(self.users_collection.find())
 
     async def create(self, user: UserModel):
-        await self.users_collection.insert_one(dict(user))
+        return await self.users_collection.insert_one(dict(user))
 
     async def update(self, id: str,  user: UserModel):
         await self.users_collection.update_one({"_id": ObjectId(id)}, {"$set": dict(user)})
