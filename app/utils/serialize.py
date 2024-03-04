@@ -4,7 +4,6 @@ from bson import ObjectId
 
 from app.models.conversations import ConversationModel
 def serialize_dict(doc) -> dict | None:
-    #TODO cuong will handle None later
     if isinstance(doc, dict):
         serialized = {
             "_id": str(doc["_id"]),  # Convert ObjectId to string (assuming it's in the root dict)
