@@ -2,6 +2,7 @@ from typing import Annotated
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from fastapi import Depends
 from app.config.mongodb import get_db
+from app.repositories.message import MessageRepository
 from app.repositories.user import UserRepository
 from app.repositories.conversation import ConversationRepository
 from app.repositories.message import MessageRepository
@@ -18,7 +19,6 @@ class RepositoryManager:
         self._user = None
         self._conversation = None
         self._message = None
-
 
     @property
     def user(self) -> UserRepository:
