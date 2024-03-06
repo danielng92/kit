@@ -1,4 +1,5 @@
-from app.utils.serialize import convert_conversations_to_mongo_data, serialize_dict, serialize_list
+from app.utils.conver_mongo_data import convert_conversations_to_mongo_data
+from app.utils.serialize import serialize_dict, serialize_list
 from .base import BaseRepository
 from bson import ObjectId
 from app.models.conversations import ConversationModel
