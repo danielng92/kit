@@ -3,7 +3,7 @@ from fastapi.responses import JSONResponse
 from starlette.middleware.sessions import SessionMiddleware
 from app.api.users import user_router
 from app.api.conversations import conversations_router
-from app.api.auth import auth_router, oauth
+from app.api.auth import auth_router, get_current_user, oauth
 from app.api.messages import messages_router
 from app.common.exceptions.exceptions import BadRequestException, ForbidenException, NotFoundException, UnauthorizeException
 
@@ -16,9 +16,7 @@ async def validate_token(request: Request, call_next):
         return await call_next(request)
     response = await call_next(request)
     try:
-        user = request.session.get('user')
-        if user is None:
-            raise UnauthorizeException("Unauthorized")
+        get_current_user(request)
     except Exception as error:
         raise UnauthorizeException("Unauthorized "  + str(error))
     return response
@@ -33,6 +31,8 @@ async def handle_exceptions_middleware(request: Request, call_next):
         return JSONResponse(status_code=400, content={'message': str(exc)})
     except UnauthorizeException as exc:
         return JSONResponse(status_code=401, content={'message': str(exc)})
+    except ForbidenException as exc:
+        return JSONResponse(status_code=403, content={'message': 'Forbiden'})
     except Exception as exc:
         return JSONResponse(status_code=500, content={'message': str(exc)})    
     

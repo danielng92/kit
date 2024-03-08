@@ -6,3 +6,6 @@ class BadRequestException(Exception):
 
 class UnauthorizeException(Exception):
     pass
+
+class ForbidenException(Exception):
+    pass
