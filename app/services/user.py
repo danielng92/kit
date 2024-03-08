@@ -42,3 +42,10 @@ class UserService():
             raise NotFoundException(f"Not found user with id: {id}")
         else:
             await self.repositories.user.remove(id)
+
+    async def get_by_email(self, email: str) -> ResponseUserModel:
+        user = await self.repositories.user.get_by_email(email)
+        if user is None:
+            raise NotFoundException(f"Not found user with id: {email}")
+        else:
+            return ResponseUserModel(**user)

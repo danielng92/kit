@@ -7,6 +7,8 @@ from starlette.responses import HTMLResponse, RedirectResponse
 from authlib.integrations.starlette_client import OAuth, OAuthError
 from fastapi.security import OAuth2AuthorizationCodeBearer
 from app.common.exceptions.exceptions import UnauthorizeException
+from app.models.users import UserLoggedIn
+from app.services.manger import ServiceManager
 
 settings = Settings()
 uri = settings.MONGODB_CONNECT_STRING
@@ -21,10 +23,14 @@ oauth.register(
     },
 )
 
-oauth2_scheme = OAuth2AuthorizationCodeBearer(
-    authorizationUrl="https://accounts.google.com/o/oauth2/auth",
-    tokenUrl="https://oauth2.googleapis.com/token",
-)
+async def get_current_user(request : Request, services : ServiceManager = Depends()) -> UserLoggedIn:
+    user = request.session.get('user')
+    if user is None:
+        raise UnauthorizeException("Unauthorized")
+    user_logged_in = UserLoggedIn(**user)
+    user_db = await services.user.get_by_email(user_logged_in.email)
+    user_logged_in.id = user_db.id
+    return user_logged_in
 
 auth_router = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
 
