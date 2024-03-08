@@ -10,7 +10,4 @@ class MessageModel(BaseModel):
 
 class ResponseMessageModel(MessageModel):
     id: str = Field(alias="_id")
-    sender_id: str
-    content: str
-    conversation_id: str
     read_by: List[dict] #objectID list of user
