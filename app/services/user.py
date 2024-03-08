@@ -1,6 +1,5 @@
 from fastapi import Depends
-from app.common.exceptions.bad_request import BadRequestException
-from app.common.exceptions.not_found import NotFoundException
+from app.common.exceptions.exceptions import BadRequestException, NotFoundException
 from app.models.users import ResponseUserModel, UserModel
 from app.repositories.manger import RepositoryManager
 

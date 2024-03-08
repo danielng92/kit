@@ -1,14 +1,11 @@
 from fastapi import Depends, FastAPI, Request
 from fastapi.responses import JSONResponse
-from fastapi.staticfiles import StaticFiles
 from starlette.middleware.sessions import SessionMiddleware
 from app.api.users import user_router
 from app.api.conversations import conversations_router
 from app.api.auth import auth_router, oauth
 from app.api.messages import messages_router
-from app.common.exceptions.bad_request import BadRequestException
-from app.common.exceptions.exceptions import UnauthorizeException
-from app.common.exceptions.not_found import NotFoundException
+from app.common.exceptions.exceptions import BadRequestException, ForbidenException, NotFoundException, UnauthorizeException
 
 app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key='!secret', https_only=False)
