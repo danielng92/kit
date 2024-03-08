@@ -1,5 +1,4 @@
-import json
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, Security
 from fastapi.responses import JSONResponse
 from app.config.settings import Settings
 from starlette.config import Config
@@ -20,7 +19,6 @@ oauth.register(
     client_kwargs={
         'scope': 'openid email profile'
     },
-    authorize_state = 'lQZeeEEnXUeceKeRyocInMIVDaOV0q'
 )
 
 oauth2_scheme = OAuth2AuthorizationCodeBearer(
@@ -30,18 +28,17 @@ oauth2_scheme = OAuth2AuthorizationCodeBearer(
 
 auth_router = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
 
-@auth_router.get('/')
-async def homepage(request: Request, token: str = Depends(oauth2_scheme)):
+@auth_router.get('/me')
+async def homepage(request: Request):
     user = request.session.get('user')
-    if user:
-        data = json.dumps(user)
-        return JSONResponse(status_code=200, content={'user': str(data)})
-    return {"Success!"}
+    print(user)
+    return user
 
 
 @auth_router.get('/login')
 async def login(request: Request):
     redirect_uri = request.url_for('auth')
+    print(redirect_uri)
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 
@@ -50,14 +47,15 @@ async def auth(request: Request):
     try:
         token = await oauth.google.authorize_access_token(request)
     except OAuthError as error:
-        return HTMLResponse(f'<h1>ERROR: {error.error}</h1>')
+        return HTMLResponse(f'<h1>{error.error}</h1>')
     user = token.get('userinfo')
     if user:
         request.session['user'] = dict(user)
-    return RedirectResponse(url='http://127.0.0.1:8000/docs')
+    return RedirectResponse(url='/docs')
 
 
 @auth_router.get('/logout')
-async def logout(request: Request):
-    request.session.pop('user', None)
-    return RedirectResponse(url='/')
+def logout(request: Request):
+    request.session.pop('user')
+    request.session.clear()
+    return RedirectResponse('/docs')
