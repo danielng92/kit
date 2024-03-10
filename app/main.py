@@ -32,7 +32,7 @@ async def handle_exceptions_middleware(request: Request, call_next):
     except UnauthorizeException as exc:
         return JSONResponse(status_code=401, content={'message': str(exc)})
     except ForbidenException as exc:
-        return JSONResponse(status_code=403, content={'message': 'Forbiden'})
+        return JSONResponse(status_code=403, content={'message': 'Forbiden ' + str(exc)})
     except Exception as exc:
         return JSONResponse(status_code=500, content={'message': str(exc)})    
     
