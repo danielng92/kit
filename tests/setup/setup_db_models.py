@@ -39,7 +39,7 @@ async def setup_db_user_not_belongto_conversation_test_models() -> tuple[str, st
     conversation_created = await conversation_collection.insert_one(convert_conversations_to_mongo_data(conversation))
 
     #Message
-    message = get_message_test(str(user_created.inserted_id), str(conversation_created.inserted_id))
+    message = get_message_test(str(randomId), str(conversation_created.inserted_id))
     message_created = await message_collection.insert_one(convert_message_to_mongo_data(message))
     
     return str(user_created.inserted_id), str(conversation_created.inserted_id), str(message_created.inserted_id)

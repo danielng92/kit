@@ -24,7 +24,7 @@ async def send_message(message: MessageModel, services: ServiceManager = Depends
     await services.message.create(message)
     return ""
 
-@messages_router.delete("/", status_code=status.HTTP_204_NO_CONTENT)
+@messages_router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def send_message(id: str, services: ServiceManager = Depends(), user: UserLoggedIn = Depends(get_current_user)):
     message = await services.message.get_by_id(id)
     if user.id != message.sender_id:

@@ -17,7 +17,7 @@ app.dependency_overrides[validate_token] = override_validate_token
 app.dependency_overrides[get_current_user] = override_get_current_user
 
 @pytest.mark.asyncio
-async def test_message_get_by_id() -> None:
+async def test_message_get_by_id_success() -> None:
     #Arrange
     user_id, conver_id, message_id = await setup_db_standard_test_models()
     #Act
@@ -57,7 +57,7 @@ async def test_message_send_conversation_id_not_exist_user_id_notfound() -> None
     assert response.json()['message'] == f"Not found conversation with id: {str(randomId)}"
 
 @pytest.mark.asyncio
-async def test_message_send_user_id_belongto_conversation_forbiden() -> None:
+async def test_message_send_user_id_not_belongto_conversation_forbiden() -> None:
     user_id, conver_id, message_id = await setup_db_user_not_belongto_conversation_test_models()
     randomId = ObjectId()
     message = get_message_test(user_id, conver_id)
@@ -74,3 +74,26 @@ async def test_message_send_success() -> None:
     response = client.post("/api/v1/message/", json=message.__dict__)
 
     assert response.status_code == 201
+
+@pytest.mark.asyncio
+async def test_message_remove_success() -> None:
+    user_id, conver_id, message_id = await setup_db_standard_test_models()
+    response = client.delete("/api/v1/message/" + message_id)
+
+    assert response.status_code == 204
+
+@pytest.mark.asyncio
+async def test_message_remove_invalid_user_id_forbiden() -> None:
+    user_id, conver_id, message_id = await setup_db_user_not_belongto_conversation_test_models()
+    response = client.delete("/api/v1/message/" + message_id)
+
+    assert response.status_code == 403
+
+@pytest.mark.asyncio
+async def test_message_remove_invalid_message_id_notfound() -> None:
+    user_id, conver_id, message_id = await setup_db_standard_test_models()
+    randomId = ObjectId() 
+    response = client.delete("/api/v1/message/" + str(randomId))
+
+    assert response.status_code == 404
+
