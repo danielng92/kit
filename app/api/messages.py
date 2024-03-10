@@ -43,7 +43,6 @@ async def get_by_conversation_id(conversation_id: str, services: ServiceManager 
 @messages_router.put("/{id}", status_code=status.HTTP_204_NO_CONTENT)
 async def edit_message(id: str, message_content: str, services: ServiceManager = Depends(), user: UserLoggedIn = Depends(get_current_user)):
     message_db = await services.message.get_by_id(id)
-    print(message_db)
     if user.id != message_db.sender_id:
         raise ForbidenException()
     message_db.content = message_content
