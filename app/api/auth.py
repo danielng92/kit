@@ -37,7 +37,6 @@ auth_router = APIRouter(prefix="/api/v1/auth", tags=["Auth"])
 @auth_router.get('/me')
 async def homepage(request: Request):
     user = request.session.get('user')
-    print(user)
     return user
 
 
