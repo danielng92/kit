@@ -2,7 +2,7 @@ from app.utils.conver_mongo_data import convert_conversations_to_mongo_data
 from app.utils.serialize import serialize_dict, serialize_list
 from .base import BaseRepository
 from bson import ObjectId
-from app.models.conversations import ConversationModel
+from app.models.conversations import ConversationModel, ResponseConversationModel
 
 class ConversationRepository(BaseRepository):
     def __init__(self, conversations_collection) -> None:
@@ -10,6 +10,12 @@ class ConversationRepository(BaseRepository):
 
     async def get_by_id(self, id: str) -> dict:
         return serialize_dict(await self.conversations_collection.find_one({"_id": ObjectId(id)}))
+    
+    async def get_by_user_id(self, user_id: str) -> list[ResponseConversationModel]:
+        conversations = self.conversations_collection.find(
+            {"users": {"$in": [ObjectId(user_id)]}}
+        )
+        return await serialize_list(conversations)
     
     async def get_by_id_all_info(self, id: str) -> dict:
         aggregation = [
