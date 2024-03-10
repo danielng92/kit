@@ -13,18 +13,18 @@ class ResponseUserModel(UserModel):
 
 class UserLoggedIn(BaseModel):
     id: str = None
-    iss: str
-    azp: str
-    aud: str
-    sub: str
-    email: str
-    email_verified: int
-    at_hash: str
-    nonce: str
-    name: str
-    picture: str
-    given_name: str
-    family_name: str
-    locale: str
-    iat: int
-    exp: int
+    iss: str = None
+    azp: str = None
+    aud: str = None
+    sub: str = None
+    email: str = None
+    email_verified: int = None
+    at_hash: str = None
+    nonce: str = None
+    name: str = None
+    picture: str = None
+    given_name: str = None
+    family_name: str = None
+    locale: str = None
+    iat: int = None
+    exp: int = None
