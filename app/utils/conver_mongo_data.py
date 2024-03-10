@@ -7,7 +7,7 @@ def convert_conversations_to_mongo_data(conversation: ConversationModel) -> dict
       "is_channel": conversation.is_channel,
       "users": [ObjectId(user_id) for user_id in conversation.users],
       "group_admin": ObjectId(conversation.group_admin),
-      "latest_message": ObjectId(conversation.latest_message),
+      "latest_message": conversation.latest_message,
       "channel_name": conversation.channel_name
     }
   return doc
