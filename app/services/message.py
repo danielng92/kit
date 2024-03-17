@@ -12,9 +12,8 @@ class MessageService():
     
     async def get_by_id(self, id: str) -> ResponseMessageModel:
         message = await self.repositories.message.get_by_id(id)
-        print(message)
         if message is None:
-            raise NotFoundException(f"Not found message with this id: {message.id}")
+            raise NotFoundException(f"Not found message with this id: {id}")
         return ResponseMessageModel(**message)
     
     async def update(self, id:str , message: MessageModel) -> None:
@@ -38,4 +37,7 @@ class MessageService():
             raise NotFoundException(f"Not found conversation with this id: {conversation_id}")
         return await self.repositories.message.get_by_conversation_id(conversation_id)
         
-        
+    async def check_sender_id_exists(self, sender_id: str):
+        user =await self.repositories.user.get_by_id(sender_id)
+        if user is None:
+            raise NotFoundException(f"Not found user with this id: {sender_id}")
