@@ -1,6 +1,5 @@
 from fastapi import Depends
-from app.common.exceptions.bad_request import BadRequestException
-from app.common.exceptions.not_found import NotFoundException
+from app.common.exceptions.exceptions import BadRequestException, NotFoundException
 from app.models.users import ResponseUserModel, UserModel
 from app.repositories.manger import RepositoryManager
 
@@ -43,3 +42,10 @@ class UserService():
             raise NotFoundException(f"Not found user with id: {id}")
         else:
             await self.repositories.user.remove(id)
+
+    async def get_by_email(self, email: str) -> ResponseUserModel:
+        user = await self.repositories.user.get_by_email(email)
+        if user is None:
+            raise NotFoundException(f"Not found user with id: {email}")
+        else:
+            return ResponseUserModel(**user)

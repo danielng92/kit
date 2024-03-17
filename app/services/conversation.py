@@ -30,6 +30,9 @@ class ConversationService(BaseService):
             return ResponseConversationModel(**conversation)
 
     async def get_by_user_id(self, user_id: str) -> list[ResponseConversationModel]:
+        user = await self.repos.user.get_by_id(user_id)
+        if user is None:
+            raise NotFoundException(f"Not found user_id with id: {user_id}")
         return await self.repos.conversation.get_by_user_id(user_id)
     
     def get_all():
