@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.12.1
+FROM --platform=lixnux/amd64 python:3.12.1
 
 # Set the working directory in the container to /app
 WORKDIR /app
