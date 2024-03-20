@@ -11,17 +11,6 @@ app = FastAPI()
 app.add_middleware(SessionMiddleware, secret_key='!secret', https_only=False)
 
 @app.middleware("http")
-async def validate_token(request: Request, call_next):
-    if "api/v1" not in request.url.path or "api/v1/auth" in request.url.path:
-        return await call_next(request)
-    response = await call_next(request)
-    try:
-        get_current_user(request)
-    except Exception as error:
-        raise UnauthorizeException("Unauthorized "  + str(error))
-    return response
-
-@app.middleware("http")
 async def handle_exceptions_middleware(request: Request, call_next):
     try:
         return await call_next(request)
